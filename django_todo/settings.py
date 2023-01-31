@@ -1,3 +1,12 @@
+from pathlib import Path
+import os
+import dj_database_url
+import env
+import os
+
+if os.path.isfile("env.py"):
+    import env
+
 """
 Django settings for django_todo project.
 
@@ -25,7 +34,7 @@ SECRET_KEY = 'django-insecure-x4b8wr!t2_aqsil_=qwbux53h_duake$)(8b7(+ldby@zna6nh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['licc009-django-todo-app.heroku.com']
 
 
 # Application definition
@@ -74,11 +83,15 @@ WSGI_APPLICATION = 'django_todo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(os.environ.get('postgres://pajbgdmy:KsGEjiGe1geiaW8ilD724rbMHQF_uckl@manny.db.elephantsql.com/pajbgdmy'))
 }
 
 
