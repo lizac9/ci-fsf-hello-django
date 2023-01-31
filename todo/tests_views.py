@@ -14,7 +14,7 @@ class TestDjango(TestCase):
         self.assertEqual(response.status_code,200)
         self.assertTemplateUsed(response, 'todo/add_item.html')
     
-    def test_get_add_edit_page(self):
+    def test_get_edit_item_page(self):
         item = Item.objects.create(name = 'Test Todo Item')
         response = self.client.get(f'/edit/{item.id}')
         self.assertEqual(response.status_code,200)
@@ -22,19 +22,26 @@ class TestDjango(TestCase):
     
     def test_can_add_item(self):
         response = self.client.post('/add',{'name':'Test Added Item'})
-        self.assertRedirects(response.'/')
+        self.assertRedirects(response,'/')
     
     def test_can_delete_item(self):
         item = Item.objects.create(name = 'Test Todo Item')
         response = self.client.get(f'/delete/{item.id}')
-        self.assertRedirects(response.'/')
+        self.assertRedirects(response,'/')
         existing_items = Item.objects.filter(id=item.id)
         self.assertEqual(len(existing_items),0)  
     
     def test_can_toggle_item(self):
         item = Item.objects.create(name = 'Test Todo Item', done=True)
         response = self.client.get(f'/toggle/{item.id}')
-        self.assertRedirects(response.'/')
+        self.assertRedirects(response,'/')
         update_item = Item.objects.get(id=item.id)
         self.assertFalse(update_item.done)
+
+    def test_can_edit_item(self):
+        item = Item.objects.create(name = 'Test Todo Item')
+        response = self.client.post(f'/edit/{item.id}',{'name':'Update Name'})
+        self.assertRedirects(response,'/')
+        update_item = Item.objects.get(id=item.id)
+        self.assertEqual(update_item.name,'Updated Name')
     
